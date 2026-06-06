@@ -3,15 +3,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Menu, Bell, Bookmark, GitCompare, User, LogOut } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import AuthModal from './AuthModal';
 
 interface NavbarProps {
     onMenuClick: () => void;
 }
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
-    const { savedColleges, compareColleges, user, logout } = useApp();
-    const [isAuthOpen, setIsAuthOpen] = useState(false);
+    const { savedColleges, compareColleges, user, logout, openAuthModal } = useApp();
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return (<header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/70 px-6 backdrop-blur-md">
@@ -85,13 +83,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                 </div>
               </>)}
           </div>) : (<div className="pl-1.5 border-l border-slate-200 ml-1.5">
-            <button onClick={() => setIsAuthOpen(true)} className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-900 bg-slate-900 px-3.5 text-xs font-bold text-white hover:bg-indigo-600 hover:border-indigo-600 transition-all active:scale-[0.97]">
+            <button onClick={openAuthModal} className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-900 bg-slate-900 px-3.5 text-xs font-bold text-white hover:bg-indigo-600 hover:border-indigo-600 transition-all active:scale-[0.97]">
               <User className="h-3.5 w-3.5"/>
               <span className="hidden sm:inline">Sign In</span>
             </button>
           </div>)}
       </div>
-
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)}/>
     </header>);
 }

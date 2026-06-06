@@ -1,19 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Compass, GitCompare, Bookmark, X, GraduationCap, MapPin, Briefcase, Sparkles, LogIn, LogOut } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import AuthModal from './AuthModal';
 import { colleges } from '../data/colleges';
+
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
 }
+
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
-    const { savedColleges, compareColleges, user, logout } = useApp();
-    const [isAuthOpen, setIsAuthOpen] = useState(false);
+    const { savedColleges, compareColleges, user, logout, openAuthModal } = useApp();
+
     const navigation = [
         { name: 'Dashboard', href: '/', icon: LayoutDashboard },
         { name: 'Explore Colleges', href: '/colleges', icon: Compass },
@@ -31,12 +32,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             badge: savedColleges.length > 0 ? savedColleges.length : undefined
         },
     ];
+
     const isActive = (href: string) => {
         if (href === '/') {
             return pathname === '/';
         }
         return pathname.startsWith(href);
     };
+
     return (<>
       
       {isOpen && (<div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden" onClick={onClose}/>)}
@@ -72,7 +75,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <span>{item.name}</span>
                 </div>
                 {item.badge !== undefined && (<span className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold ${active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                    {item.badge}
+                     {item.badge}
                   </span>)}
               </Link>);
         })}
@@ -133,13 +136,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <LogOut className="h-4.5 w-4.5"/>
             </button>
           </div>) : (<div className="mt-6 border-t border-slate-100 pt-5">
-            <button onClick={() => setIsAuthOpen(true)} className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-indigo-600 transition-colors shadow-sm">
+            <button onClick={openAuthModal} className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-indigo-600 transition-colors shadow-sm">
               <LogIn className="h-4.5 w-4.5"/>
               <span>Sign In / Sign Up</span>
             </button>
           </div>)}
       </aside>
-
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)}/>
     </>);
 }

@@ -23,6 +23,9 @@ interface AppContextType {
     deleteComparisonSet: (id: string) => void;
     compareWarning: string;
     clearCompareWarning: () => void;
+    isAuthOpen: boolean;
+    openAuthModal: () => void;
+    closeAuthModal: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,6 +35,10 @@ export function AppProvider({ children }: {
 }) {
     const [user, setUser] = useLocalStorage<User | null>('colla_user', null);
     const [compareWarning, setCompareWarning] = useState<string>('');
+    const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
+
+    const openAuthModal = useCallback(() => setIsAuthOpen(true), []);
+    const closeAuthModal = useCallback(() => setIsAuthOpen(false), []);
 
     // Dynamically scope storage keys to user ID if authenticated
     const userCollegesKey = user ? `colla_${user.id}_saved_colleges` : 'colla_saved_colleges';
@@ -171,7 +178,10 @@ export function AppProvider({ children }: {
             saveComparisonSet,
             deleteComparisonSet,
             compareWarning,
-            clearCompareWarning
+            clearCompareWarning,
+            isAuthOpen,
+            openAuthModal,
+            closeAuthModal
         }}>
       {children}
     </AppContext.Provider>);

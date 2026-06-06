@@ -3,11 +3,17 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import AuthModal from './AuthModal';
+import { useApp } from '../context/AppContext';
+
 interface DashboardLayoutProps {
     children: React.ReactNode;
 }
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { isAuthOpen, closeAuthModal } = useApp();
+
     return (<div className="min-h-screen bg-slate-50 flex">
       
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}/>
@@ -22,5 +28,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         
         <Footer />
       </div>
+
+      <AuthModal isOpen={isAuthOpen} onClose={closeAuthModal}/>
     </div>);
 }

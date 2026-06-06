@@ -7,14 +7,12 @@ import { College } from '@/types';
 import { useRouter } from 'next/navigation';
 import CompareTable from '@/components/CompareTable';
 import EmptyState from '@/components/EmptyState';
-import AuthModal from '@/components/AuthModal';
 
 export default function CompareCollegesPage() {
     const router = useRouter();
-    const { compareColleges, toggleCompareCollege, user, saveComparisonSet, compareWarning, clearCompareWarning } = useApp();
+    const { compareColleges, toggleCompareCollege, user, saveComparisonSet, compareWarning, clearCompareWarning, openAuthModal } = useApp();
     const [searchQuery, setSearchQuery] = useState('');
     const [isFocused, setIsFocused] = useState(false);
-    const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [comparisonName, setComparisonName] = useState('');
     const [saveSuccess, setSaveSuccess] = useState('');
@@ -44,7 +42,7 @@ export default function CompareCollegesPage() {
 
     const handleSaveComparisonClick = () => {
         if (!user) {
-            setIsAuthOpen(true);
+            openAuthModal();
             return;
         }
         const defaultName = collegesToCompare.map((c) => c.shortName).join(' vs ');
@@ -246,8 +244,5 @@ export default function CompareCollegesPage() {
             </div>
           </form>
         </div>)}
-
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)}/>
     </div>);
 }
-
