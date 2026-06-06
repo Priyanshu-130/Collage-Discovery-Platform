@@ -226,9 +226,9 @@ export default function CompareCollegesPage() {
       {collegesToCompare.length > 0 ? (<CompareTable collegesToCompare={collegesToCompare}/>) : (<EmptyState title="Comparison List is Empty" description="You haven't selected any institutes to compare yet. Add colleges using the explorer search or details checklist." icon={GitCompare} actionText="Browse Colleges Explorer" onAction={() => router.push('/colleges')}/>)}
 
       
-      {isSaveModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+      {isSaveModalOpen && (<div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/40 p-4 py-10 backdrop-blur-sm">
           <div className="fixed inset-0" onClick={() => setIsSaveModalOpen(false)}/>
-          <form onSubmit={handleSaveSubmit} className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl space-y-4">
+          <form onSubmit={handleSaveSubmit} className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl space-y-4 my-auto">
             <div>
               <h3 className="text-base font-bold text-slate-800">Name Your Comparison Set</h3>
               <p className="text-xs text-slate-500 font-semibold mt-1 leading-normal">

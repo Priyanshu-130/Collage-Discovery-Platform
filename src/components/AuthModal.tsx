@@ -60,10 +60,10 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
         onClose();
     };
 
-    return (<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+    return (<div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/40 p-4 py-10 backdrop-blur-sm">
       <div className="fixed inset-0" onClick={onClose}/>
       
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all duration-300 animate-fade-in">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all duration-300 animate-fade-in my-auto">
         
         <div className="bg-slate-900 px-6 py-8 text-white relative">
           <div className="absolute top-0 right-0 -mr-12 -mt-12 h-32 w-32 rounded-full bg-indigo-500/20 blur-2xl"/>
