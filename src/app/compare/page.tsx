@@ -113,7 +113,10 @@ export default function CompareCollegesPage() {
 
           
           {isFocused && searchQuery && (<div className="absolute left-5 right-5 z-25 mt-1 max-h-60 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-100/50">
-              {suggestions.length > 0 ? (suggestions.map((item) => (<button key={item.id} onClick={() => handleAddCollege(item.id)} className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-b-0">
+              {suggestions.length > 0 ? (suggestions.map((item) => (<button key={item.id} onMouseDown={(e) => {
+                e.preventDefault();
+                handleAddCollege(item.id);
+            }} className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-b-0">
                     <div className="min-w-0 pr-4">
                       <span className="block text-sm font-bold text-slate-800 truncate leading-snug">{item.name}</span>
                       <span className="text-[10px] font-semibold text-slate-400 flex items-center gap-0.5 mt-0.5">
