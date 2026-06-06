@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { X, GraduationCap, Lock, Mail, User, ShieldCheck } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+
 interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialMode?: 'login' | 'signup';
 }
+
 export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalProps) {
     const { login, signup } = useApp();
     const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
@@ -14,8 +16,24 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
     if (!isOpen)
         return null;
+
+    const getPasswordStrength = (pass: string) => {
+        if (!pass) return { score: 0, label: '', color: 'bg-slate-200', textColor: 'text-slate-400' };
+        let score = 0;
+        if (pass.length >= 6) score += 1;
+        if (pass.length >= 8) score += 1;
+        if (/[A-Z]/.test(pass)) score += 1;
+        if (/[0-9]/.test(pass)) score += 1;
+        if (/[^A-Za-z0-9]/.test(pass)) score += 1;
+
+        if (score <= 1) return { score, label: 'Weak', color: 'bg-rose-500', textColor: 'text-rose-600' };
+        if (score <= 3) return { score, label: 'Moderate', color: 'bg-amber-500', textColor: 'text-amber-600' };
+        return { score, label: 'Strong', color: 'bg-emerald-500', textColor: 'text-emerald-600' };
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -41,10 +59,11 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
         }
         onClose();
     };
+
     return (<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
       <div className="fixed inset-0" onClick={onClose}/>
       
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all duration-300">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl transition-all duration-300 animate-fade-in">
         
         <div className="bg-slate-900 px-6 py-8 text-white relative">
           <div className="absolute top-0 right-0 -mr-12 -mt-12 h-32 w-32 rounded-full bg-indigo-500/20 blur-2xl"/>
@@ -96,7 +115,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                   <User className="h-4.5 w-4.5"/>
                 </span>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Priyanshu Ranjan" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"/>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Priyanshu Ranjan" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all font-semibold" required={mode === 'signup'}/>
               </div>
             </div>)}
 
@@ -106,7 +125,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
               <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                 <Mail className="h-4.5 w-4.5"/>
               </span>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. user@domain.com" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"/>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. user@domain.com" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all font-semibold" required/>
             </div>
           </div>
 
@@ -116,8 +135,25 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
               <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                 <Lock className="h-4.5 w-4.5"/>
               </span>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"/>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all font-semibold" required/>
             </div>
+
+            {mode === 'signup' && password && (<div className="space-y-1 mt-2.5 px-0.5">
+                <div className="flex justify-between items-center text-[10px] font-bold">
+                  <span className="text-slate-400 uppercase tracking-wider">Password Strength</span>
+                  <span className={`font-bold ${getPasswordStrength(password).textColor}`}>{getPasswordStrength(password).label}</span>
+                </div>
+                <div className="h-1.5 w-full bg-slate-100 border border-slate-200/50 rounded-full overflow-hidden flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((level) => {
+                const strength = getPasswordStrength(password);
+                const active = level <= strength.score;
+                return (<div key={`strength-bar-${level}`} className={`h-full flex-1 transition-all duration-300 ${active ? strength.color : 'bg-slate-200/60'}`}/>);
+            })}
+                </div>
+                <span className="block text-[9px] text-slate-400 font-semibold leading-normal mt-1">
+                  Tip: Use 8+ chars, uppercase letters, numbers, and symbols.
+                </span>
+              </div>)}
           </div>
 
           

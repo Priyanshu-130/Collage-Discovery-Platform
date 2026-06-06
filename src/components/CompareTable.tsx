@@ -13,6 +13,14 @@ export default function CompareTable({ collegesToCompare }: CompareTableProps) {
     const { removeFromCompare, clearCompare } = useApp();
     if (collegesToCompare.length === 0)
         return null;
+    const focusSearchInput = () => {
+        const searchInput = document.getElementById('compare-search-input');
+        if (searchInput) {
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            searchInput.focus();
+        }
+    };
+
     const renderRow = (label: string, accessor: (c: College) => React.ReactNode, highlightBetter?: boolean, betterValueSelector?: (c: College) => number) => {
         let betterIndex = -1;
         if (highlightBetter && collegesToCompare.length === 2 && betterValueSelector) {
@@ -39,7 +47,7 @@ export default function CompareTable({ collegesToCompare }: CompareTableProps) {
             </td>);
             })}
         
-        {collegesToCompare.length === 1 && (<td className="py-4 px-6 text-sm text-slate-400 italic bg-slate-50/50">
+        {collegesToCompare.length === 1 && (<td onClick={focusSearchInput} className="py-4 px-6 text-sm text-slate-400 italic bg-slate-50/50 cursor-pointer hover:bg-slate-100/50 hover:text-indigo-600 font-semibold transition-colors">
             Select another college to compare
           </td>)}
       </tr>);
@@ -88,17 +96,18 @@ export default function CompareTable({ collegesToCompare }: CompareTableProps) {
                   </div>
                 </th>))}
               
-              {collegesToCompare.length === 1 && (<th className="py-5 px-6 text-center bg-slate-50/50 min-w-[280px]">
+              {collegesToCompare.length === 1 && (<th onClick={focusSearchInput} className="py-5 px-6 text-center bg-slate-50/50 min-w-[280px] cursor-pointer hover:bg-slate-100/70 transition-colors group/add-col">
                   <div className="flex flex-col items-center justify-center py-6 text-slate-400">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 border-2 border-dashed border-slate-200 mb-3 text-slate-300 text-xl font-bold">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 border-2 border-dashed border-slate-200 mb-3 text-slate-350 text-xl font-bold group-hover/add-col:border-indigo-300 group-hover/add-col:bg-indigo-50 group-hover/add-col:text-indigo-600 transition-all">
                       +
                     </div>
-                    <p className="text-sm font-semibold mb-1 text-slate-500">Add College</p>
-                    <p className="text-xs text-slate-400 max-w-[180px]">
+                    <p className="text-sm font-bold mb-1 text-slate-500 group-hover/add-col:text-indigo-600 transition-all">Add College</p>
+                    <p className="text-xs text-slate-400 max-w-[180px] font-semibold">
                       Search and choose another college to compare side-by-side.
                     </p>
                   </div>
                 </th>)}
+
             </tr>
           </thead>
           <tbody>
